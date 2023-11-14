@@ -1,0 +1,2490 @@
+swagger: '2.0'
+host: buonodom.sceltasociale.it
+basePath: /buonodombff/api/v1
+schemes:
+  - https
+info:
+  title: 'Buono Domiciliarità'
+  contact:
+    email: maurizio.peisino@csi.it
+  version: 0.14.0
+  description: |
+   
+    ## Versione 0.0.1 (10 Mag 2022)
+    * Prima implementazione
+    
+    ## Versione 0.1.0 (25 Nov 2022)
+    * Definizione del servizio richieste
+    * Definizione del servizio cronologia
+    * Definizione servizio informative
+    
+    ## Versione 0.2.0 (29 Nov 2022)
+    * Definizione del servizio anagrafica
+    * Modifiche e correzioni
+    
+    ## Versione 0.3.0 (06 Dic 2022)
+    * Eliminazione del servizio informative
+    * Definizione del servizio cambio stato
+    * Utilizzo di multipart/form-data
+    
+    ## Versione 0.4.0 (12 Dic 2022)
+    * Definizione del servizio allegati
+    * Definizione del servizio sportelli
+    * Aggiunta campo allegati nel servizio domande
+    * Modifiche campi enum
+    
+    ## Versione 0.5.0 (14 Dic 2022)
+    * Definizione del servizio decodifiche
+    * Aggiunta campo rettificare
+    * Semplificazione upload allegato tramite servizio
+    
+    ## Versione 0.5.1 (16 Dic 2022)
+    * Specializzazione servizi decodifica
+    
+    ## Versione 0.5.2 (20 Dic 2022)
+    * Servizio decodifica ASL
+    * Aggiunta campo domicilio_destinatario
+    * Aggiunta campo data_decesso
+    * Aggiunta campo asl_destinatario
+    
+    ## Versione 0.5.3 (21 Dic 2022)
+    * Eliminato vincolo CF
+    
+    ## Versione 0.6.0 (22 Dic 2022)
+    * Servizio decodifica valutazione multidimensionale
+    * Razionalizzazione ed aggiunta campi
+    
+    ## Versione 0.6.1 (27 Dic 2022)
+    * Array allegati in servizio decodifica relazione
+    * Anagrafiche senza residenza per datore di lavoro e lavoratore
+    
+    ## Versione 0.6.2 (29 Dic 2022)
+    * Fix refusi su campi
+    
+    ## Versione 0.6.3 (30 Dic 2022)
+    * Fix refusi su models
+    
+    ## Versione 0.6.4 (03 Gen 2023)
+    * Aggiunta header X-Filename-Originale
+    * Content-Disposition per download allegati con filename originale
+    * correzione typo data_inizio in sportelli
+    
+    ## Versione 0.6.5 (05 Gen 2023)
+    * Numero domanda come stringa in cronologia
+    
+    ## Versione 0.6.6 (10 Gen 2023)
+    * Risposta POST cronologia come oggetto singolo anzichè array
+    
+    ## Versione 0.6.7 (12 Gen 2023)
+    * Aggiunta campi data inizio e fine contratto
+    * Fix mime type pdf in allegato
+    * Rimozione header custom per GET allegati
+    
+    ## Versione 0.6.8 (16 Gen 2023)
+    * Fix formato date
+    
+    ## Versione 0.7.0 (23 Gen 2023)
+    * Aggiunta servizio contatti
+    
+    ## Versione 0.7.1 (28 Gen 2023)
+    * Aggiunta dati protocollo in richiesta buono (anteprima e dettaglio)
+    
+    ## Versione 0.8.0 (08 Feb 2023)
+    * Aggiunta servizio decodifica tipi supporto familiare
+    * Aggiunta campo partita iva assistente familiare
+    * Aggiunta campo tipo supporto familiare (educatore / assistente familiare)
+    * Definizione errore 422
+    
+    ## Versione 0.9.0 (20 Mar 2023)
+    * Aggiunta servizio preferenze
+    * Aggiunta campo note_richiedente
+
+    ## Versione 0.10.0 (12 Giu 2023)
+    * Consolidamento documentazione
+    * Definizione tag
+    * Aggiunta servizio rendicontazione
+    * Aggiunta servizio contratti
+    * Aggiunta servizio allegati per rendicontazione
+    * Aggiunta servizio allegati per contratti
+
+    ## Versione 0.11.0 (19 Giu 2023)
+    * Unione servizio allegati buono (rendicontazione + contratto)
+    * Modifica servizio rendicontazione con inserimento id allegati
+    * Modifica servizio contratto con inserimento id allegati
+
+    ## Versione 0.11.1 (22 Giu 2023)
+    * Fix tipo allegato in post allegato-buono
+    * Fix oggetto contratto con allegati
+
+    ## Versione 0.11.2 (23 Giu 2023)
+    * Refactoring servizio rendicontazione (documento di spesa)
+    * Refactoring allegati buono
+    * Aggiunta decodifiche
+
+    ## Versione 0.12.0 (28 Giu 2023)
+    * Aggiunta servizio periodo di rendicontazione e mesi sabbatici
+
+    ## Versione 0.13.0 (04 Lug 2023)
+    * Aggiunta servizio cronologia buono
+
+    ## Versione 0.13.1 (06 Lug 2023)
+    * Aggiunta array mesi non rendicontati
+
+    ## Versione 0.14.0 (27 Lug 2023)
+    * Aggiunta aservizio modifica conto corrente accredito
+    * Aggiunta metodo DELETE per contratto
+
+tags:
+  - name: Servizio attivo
+  - name: Notificatore
+  - name: Anagrafica
+  - name: Domande
+  - name: Cronologia dei cambi di stato
+  - name: Contratti
+  - name: Accredito
+  - name: Rendicontazione
+  - name: Allegati
+  - name: Decodifiche
+paths:
+  '/servizio-attivo':
+    get:
+      tags:
+        - Servizio attivo
+      operationId: getServizioAttivo
+      summary: Raggiungibilità
+      description: |
+        Serve per verificare se il servizio risponde o meno
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+      responses:
+        '200':
+          description: |
+            La richiesta è andata a buon fine quindi il servizio è online
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            $ref: '#/definitions/model_info_servizio'
+        '500':
+          $ref: '#/responses/InternalServerError'
+  '/contatti':
+    get:
+      tags:
+        - Notificatore
+      operationId: getContattiUtente
+      summary: Contatti dell'utente censiti dal notificatore
+      description: |
+        Serve per ottenere i contatti dell'utente
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+      responses:
+        '200':
+          description: |
+            Contatti utente presenti nel notificatore
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/model_contatti'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'
+  '/preferenze':
+    get:
+      tags:
+        - Notificatore
+      operationId: getPreferenzeUtente
+      summary: Preferenze di contatto dell'utente impostate sul notificatore
+      description: |
+        Serve per ottenere le preferenze sui canali per welfdom
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+      responses:
+        '200':
+          description: |
+            Preferenze di contatto presenti nel notificatore
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/model_preferenze'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'
+  '/sportelli':
+    get:
+      tags:
+        - Domande
+      operationId: getSportelli
+      summary: Elenco degli sportelli attivi
+      description: |
+        Serve per ottenere la lista degli sportelli attivi 
+        (data_fine >= data attuale)
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+      responses:
+        '200':
+          description: |
+            Elenca gli sportelli attivi
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/model_sportello'
+        '500':
+          $ref: '#/responses/InternalServerError'
+  '/richieste':
+    get:
+      tags:
+        - Domande
+      operationId: getRichieste
+      summary: Elenco richieste effettuate dal cittadino
+      description: |
+        Serve per ottenere la lista delle proprie richieste
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+      responses:
+        '200':
+          description: |
+            Lista delle richieste effettuate dal cittadino (anteprime)
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            type: array
+            items: 
+              $ref: '#/definitions/model_anteprima_richiesta'
+        '500':
+          $ref: '#/responses/InternalServerError'
+    post:
+      tags:
+        - Domande
+      operationId: addRichiesta
+      summary: Invio richiesta buono domiciliarità
+      description: |
+        Serve per creare una nuova richiesta di buono domiciliarità 
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+        - $ref: '#/parameters/body_bozza_richiesta'
+      responses:
+        '200':
+          description: |
+            Anteprima della richiesta salvata contenente il numero richiesta
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            $ref: '#/definitions/model_anteprima_richiesta'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '409':
+          $ref: '#/responses/Conflict'
+        '422':
+          $ref: '#/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/responses/InternalServerError'
+  '/richieste/{numero_richiesta}':
+    get:
+      tags:
+        - Domande
+      operationId: getRichiesta
+      summary: Dettaglio richiesta effettuata dal cittadino
+      description: |
+        Serve per ottenere il dettaglio della richiesta quando è necessario 
+        modificare la domanda
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/path_numero_richiesta'
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+      responses:
+        '200':
+          description: |
+            Dettaglio della richiesta effettuata dal cittadino
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            $ref: '#/definitions/model_richiesta'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '403':
+          $ref: '#/responses/Forbidden'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'
+    put:
+      tags:
+        - Domande
+      operationId: putRichiesta
+      summary: Modifica richiesta buono domiciliarità
+      description: |
+        Serve per modificare una richiesta di buono domiciliarità 
+        nei casi previsti (stato BOZZA e DA_RETTIFICARE)
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/path_numero_richiesta'
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+        - $ref: '#/parameters/body_richiesta'
+      responses:
+        '200':
+          description: |
+            Dettaglio della richiesta modificata
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            $ref: '#/definitions/model_richiesta'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '403':
+          $ref: '#/responses/Forbidden'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'
+  '/cronologia/{numero_richiesta}':
+    get:
+      tags:
+        - Cronologia dei cambi di stato
+      operationId: getCronologia
+      summary: Cronologia dei cambi di stato della richiesta effettuata
+      description: |
+        Serve per ottenere al cronologia dei cambi di stato
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/path_numero_richiesta'
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+      responses:
+        '200':
+          description: |
+            Cronologia dei cambi di stato
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/model_cronologia'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '403':
+          $ref: '#/responses/Forbidden'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'
+    post:
+      tags:
+        - Cronologia dei cambi di stato
+      operationId: postCronologia
+      summary: Richiesta del cambio di stato
+      description: |
+        Serve per richiedere il cambio di stato bozza/inviato 
+        o gestire la rettifica 
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/path_numero_richiesta'
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+        - $ref: '#/parameters/body_stato'
+      responses:
+        '200':
+          description: |
+            Cronologia dei cambi di stato aggiornata
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            $ref: '#/definitions/model_cronologia'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '403':
+          $ref: '#/responses/Forbidden'
+        '404':
+          $ref: '#/responses/NotFound'
+        '422':
+          $ref: '#/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/responses/InternalServerError'
+  '/cronologia-buono/{numero_richiesta}':
+    get:
+      tags:
+        - Cronologia dei cambi di stato
+      operationId: getCronologiaBuono
+      summary: Cronologia dei cambi di stato del buono
+      description: |
+        Serve per ottenere al cronologia dei cambi di stato
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/path_numero_richiesta'
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+      responses:
+        '200':
+          description: |
+            Cronologia dei cambi di stato
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/model_cronologia'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '403':
+          $ref: '#/responses/Forbidden'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'
+    post:
+      tags:
+        - Cronologia dei cambi di stato
+      operationId: postCronologiaBuono
+      summary: Modifica del cambio di stato del buono
+      description: |
+        Serve per richiederela revoca del buono
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/path_numero_richiesta'
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+        - $ref: '#/parameters/body_stato'
+      responses:
+        '200':
+          description: |
+            Cronologia dei cambi di stato aggiornata
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            $ref: '#/definitions/model_cronologia'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '403':
+          $ref: '#/responses/Forbidden'
+        '404':
+          $ref: '#/responses/NotFound'
+        '422':
+          $ref: '#/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/responses/InternalServerError'
+  '/contratti/{numero_richiesta}':
+    get:
+      tags:
+        - Contratti
+      operationId: getContratti
+      summary: Elenco dei contratti riferiti al singolo buono
+      description: |
+        Serve per ottenere la lista dei contratti relativi all'erogazione di un singlo buono
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/path_numero_richiesta'
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+      responses:
+        '200':
+          description: |
+            Elenco contratti per singolo buono
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/model_contratto_allegati'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '403':
+          $ref: '#/responses/Forbidden'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'
+    post:
+      tags:
+        - Contratti
+      operationId: addContratto
+      summary: Aggiunta di un nuovo contratto
+      description: |
+        Serve per aggiungere le informazioni relative ad un nuovo contratto
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/path_numero_richiesta'
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+        - $ref: '#/parameters/body_contratto_allegati'
+      responses:
+        '200':
+          description: |
+            Contratto aggiunto
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            $ref: '#/definitions/model_contratto_allegati'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '403':
+          $ref: '#/responses/Forbidden'
+        '404':
+          $ref: '#/responses/NotFound'
+        '422':
+          $ref: '#/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/responses/InternalServerError'
+  '/contratti/{numero_richiesta}/{id_contratto}':
+    put:
+      tags:
+        - Contratti
+      operationId: putContratto
+      summary: Modifica di un contratto
+      description: |
+        Serve a modificare il contratto inserendo una data di fine contratto
+        (altri tipi di modifica non dovrebbero essere permessi)
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/path_numero_richiesta'
+        - $ref: '#/parameters/path_id_contratto'
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+        - $ref: '#/parameters/body_contratto'
+      responses:
+        '200':
+          description: |
+            Contratto modificato
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+        '400':
+          $ref: '#/responses/BadRequest'
+        '403':
+          $ref: '#/responses/Forbidden'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'
+    delete:
+      tags:
+        - Contratti
+      operationId: deleteContratto
+      summary: Elimina un contratto
+      description: |
+        Serve ad eliminare il contratto (se non è già stato associato ad un documento di spesa)
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/path_numero_richiesta'
+        - $ref: '#/parameters/path_id_contratto'
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+      responses:
+        '200':
+          description: |
+            Contratto eliminato
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+        '422':
+          $ref: '#/responses/UnprocessableEntity'
+        '403':
+          $ref: '#/responses/Forbidden'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'
+  '/accredito/{numero_richiesta}':
+    get:
+      tags:
+        - Accredito
+      operationId: getAccredito
+      summary: Dati del conto corrente di accredito
+      description: |
+        Serve per ottenere l'intestatario e l'IBAN del conto di accredito
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/path_numero_richiesta'
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+      responses:
+        '200':
+          description: |
+            Conto corrente di accredito
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            $ref: '#/definitions/model_accredito'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '403':
+          $ref: '#/responses/Forbidden'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'
+    post:
+      tags:
+        - Accredito
+      operationId: addAccredito
+      summary: Modifica dati del conto corrente di accredito (aggiungendo un nuovo record allo storico)
+      description: |
+        Serve per modificare l'intestatario e l'IBAN del conto di accredito
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/path_numero_richiesta'
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+        - $ref: '#/parameters/body_accredito'
+      responses:
+        '200':
+          description: |
+            Conto corrente di accredito
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            $ref: '#/definitions/model_accredito'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '403':
+          $ref: '#/responses/Forbidden'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'
+  '/fornitori/{numero_richiesta}':
+    get:
+      tags:
+        - Rendicontazione
+      operationId: getFornitori
+      summary: Elenco dei fornitori riferiti al singolo buono
+      description: |
+        Serve per ottenere la lista dei fornitori
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/path_numero_richiesta'
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+      responses:
+        '200':
+          description: |
+            Elenco fornitori per singolo buono
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/model_fornitore'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '403':
+          $ref: '#/responses/Forbidden'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'
+  '/documento-spesa/{numero_richiesta}':
+    get:
+      tags:
+        - Rendicontazione
+      operationId: getRendicontazione
+      summary: Elenco dei documenti di spesa riferiti al singolo buono
+      description: |
+        Serve per ottenere la lista dei documenti di spesa di un singlo buono
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/path_numero_richiesta'
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+      responses:
+        '200':
+          description: |
+            Elenco documenti di spesa per singolo buono
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/model_documento_spesa'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '403':
+          $ref: '#/responses/Forbidden'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'
+    post:
+      tags:
+        - Rendicontazione
+      operationId: addRendicontazione
+      summary: Aggiunta di un nuovo documento di spesa
+      description: |
+        Serve per aggiungere le informazioni relative ad un nuovo documento di spesa
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/path_numero_richiesta'
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+        - $ref: '#/parameters/body_documento_spesa'
+      responses:
+        '200':
+          description: |
+            Rendicontazione aggiunta
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            $ref: '#/definitions/model_documento_spesa'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '403':
+          $ref: '#/responses/Forbidden'
+        '404':
+          $ref: '#/responses/NotFound'
+        '422':
+          $ref: '#/responses/UnprocessableEntity'
+        '500':
+          $ref: '#/responses/InternalServerError'
+  '/rendicontazione/{numero_richiesta}/{id_documento_spesa}':
+    delete:
+      tags:
+        - Rendicontazione
+      operationId: deleteRendicontazione
+      summary: Elimina documento di spesa
+      description: |
+        Serve per eliminare un documento di spesa inserito
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/path_numero_richiesta'
+        - $ref: '#/parameters/path_id_documento_spesa'
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+      responses:
+        '200':
+          description: |
+            Documento di spesa eliminato
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+        '400':
+          $ref: '#/responses/BadRequest'
+        '403':
+          $ref: '#/responses/Forbidden'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'
+  '/periodo-rendicontazione/{numero_richiesta}':
+    get:
+      tags:
+        - Rendicontazione
+      operationId: periodoRendicontazione
+      summary: Periodo di fruizione, rendicontazione e mesi sabbatici
+      description: |
+        Serve per ottenere il periodo di fruizione del buono, 
+        di rendicontazione ed eventuali mesi sabbatici
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/path_numero_richiesta'
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+      responses:
+        '200':
+          description: |
+            Periodo di fruizione, rendicontazione, sabbatici
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            $ref: '#/definitions/model_fruizione'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '403':
+          $ref: '#/responses/Forbidden'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'
+    put:
+      tags:
+        - Rendicontazione
+      operationId: mesiSabbatici
+      summary: Modifica mesi sabbatici
+      description: |
+        Serve per inserire o modificare i mesi sabbatici
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/path_numero_richiesta'
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+        - $ref: '#/parameters/body_sabbatici'
+      responses:
+        '200':
+          description: |
+            Periodo di fruizione, rendicontazione, sabbatici
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            $ref: '#/definitions/model_fruizione'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '403':
+          $ref: '#/responses/Forbidden'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'
+  '/allegato/{numero_richiesta}/{tipo_allegato}':
+    get:
+      tags:
+        - Allegati
+      operationId: getAllegato
+      summary: Visualizza allegato richiesta
+      description: |
+        Serve per visualizzare l'allegato della domanda presentata dal cittadino
+      produces:
+        - application/json
+        - application/pdf
+        - image/jpeg
+        - image/png
+      parameters:
+        - $ref: '#/parameters/path_tipo_allegato'
+        - $ref: '#/parameters/path_numero_richiesta'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+      responses:
+        '200':
+          description: |
+            Allegato della domanda (contenuto del file)
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+            Content-Disposition:
+              type: string
+              description: attachment; filename="[X-Filename-Originale]"
+          schema:
+            type: string
+            format: binary
+        '400':
+          $ref: '#/responses/BadRequest'
+        '403':
+          $ref: '#/responses/Forbidden'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'
+    post:
+      tags:
+        - Allegati
+      operationId: addAllegato
+      summary: Inserisci allegato richiesta
+      description: |
+        Serve per caricare un allegato della domanda
+      consumes:
+        - application/pdf
+        - image/jpeg
+        - image/png
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/path_tipo_allegato'
+        - $ref: '#/parameters/path_numero_richiesta'
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+        - $ref: '#/parameters/header_x_filename_originale'
+        - $ref: '#/parameters/header_content_type'
+        - $ref: '#/parameters/body_allegato'
+      responses:
+        '200':
+          description: |
+            Conferma del caricamento del file
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            $ref: '#/definitions/model_allegato'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '403':
+          $ref: '#/responses/Forbidden'
+        '415':
+          $ref: '#/responses/UnsupportedMediaType'
+        '500':
+          $ref: '#/responses/InternalServerError'
+  '/allegato-buono/{numero_richiesta}/{tipo_allegato}':
+    post:
+      tags:
+        - Allegati
+      operationId: addAllegatoBuono
+      summary: Inserisci allegato contratto/rendicontazione
+      description: |
+        Serve per caricare un allegato del contratto o del documento di rendicontazione
+      consumes:
+        - application/pdf
+        - image/jpeg
+        - image/png
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/path_tipo_allegato'
+        - $ref: '#/parameters/path_numero_richiesta'
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+        - $ref: '#/parameters/header_x_filename_originale'
+        - $ref: '#/parameters/header_content_type'
+        - $ref: '#/parameters/body_allegato'
+      responses:
+        '200':
+          description: |
+            Conferma del caricamento del file (con ID)
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            $ref: '#/definitions/model_allegato'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '403':
+          $ref: '#/responses/Forbidden'
+        '415':
+          $ref: '#/responses/UnsupportedMediaType'
+        '500':
+          $ref: '#/responses/InternalServerError'
+  '/allegato-buono/{id_allegato}':
+    get:
+      tags:
+        - Allegati
+      operationId: getAllegatoBuono
+      summary: Visualizza allegato contratto/rendicontazione
+      description: |
+        Serve per visualizzare un allegato del contratto o del documento di rendicontazione
+      produces:
+        - application/json
+        - application/pdf
+        - image/jpeg
+        - image/png
+      parameters:
+        - $ref: '#/parameters/path_id_allegato'
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+      responses:
+        '200':
+          description: |
+            Allegato del contratto o del documento di rendicontazione (contenuto del file)
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+            Content-Disposition:
+              type: string
+              description: attachment; filename="[X-Filename-Originale]"
+          schema:
+            type: string
+            format: binary
+        '400':
+          $ref: '#/responses/BadRequest'
+        '403':
+          $ref: '#/responses/Forbidden'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'
+  '/anagrafica/{cf}':
+    get:
+      tags:
+        - Anagrafica
+      operationId: getAnagrafica
+      summary: Anagrafica del cittadino
+      description: |
+        Serve per ottenere l'anagrafica del cittadino a partire dal CF
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/path_cf'
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+      responses:
+        '200':
+          description: |
+            Anagrafica del cittadino
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            $ref: '#/definitions/model_persona'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'
+  '/decodifiche/tipi-allegato':
+    get:
+      tags:
+        - Decodifiche
+      operationId: getTipiAllegato
+      summary: Elenchi di decodifica codice/valore dei tipi di allegato
+      description: |
+        Serve per ottenere gli elenchi di decodifica dei tipi di allegato
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+      responses:
+        '200':
+          description: |
+            Elenco di decodifica per il tipo di allegato
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/model_decodifica'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'    
+  '/decodifiche/titoli-studio':
+    get:
+      tags:
+        - Decodifiche
+      operationId: getTitoliStudio
+      summary: Elenchi di decodifica codice/valore dei titoli di studio
+      description: |
+        Serve per ottenere gli elenchi di decodifica dei titoli di studio
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+      responses:
+        '200':
+          description: |
+            Elenco di decodifica per il titolo di studio
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/model_decodifica'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'
+  '/decodifiche/tipi-contratto':
+    get:
+      tags:
+        - Decodifiche
+      operationId: getTipiContratto
+      summary: Elenchi di decodifica codice/valore dei tipi di contratto
+      description: |
+        Serve per ottenere gli elenchi di decodifica dei tipi di contratto
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+      responses:
+        '200':
+          description: |
+            Elenco di decodifica per il tipo di contratto
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/model_decodifica'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'
+  '/decodifiche/tipi-rapporto':
+    get:
+      tags:
+        - Decodifiche
+      operationId: getTipiRapporto
+      summary: Elenchi di decodifica codice/valore dei tipi di rapporto
+      description: |
+        Serve per ottenere gli elenchi di decodifica dei tipi di rapporto
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+      responses:
+        '200':
+          description: |
+            Elenco di decodifica per il tipo di rapporto 
+            (contiene indicazione di necessità del documento di delega)
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/model_decodifica_rapporto'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'
+  '/decodifiche/stati-domanda':
+    get:
+      tags:
+        - Decodifiche
+      operationId: getStatiDomanda
+      summary: Elenchi di decodifica codice/valore dello stato domanda
+      description: |
+        Serve per ottenere gli elenchi di decodifica stato domanda
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+      responses:
+        '200':
+          description: |
+            Elenco di decodifica per lo stato domanda
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/model_decodifica'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'
+  '/decodifiche/asl':
+    get:
+      tags:
+        - Decodifiche
+      operationId: getAsl
+      summary: Elenchi di decodifica codice/valore delle ASL
+      description: |
+        Serve per ottenere gli elenchi di decodifica ASL
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+      responses:
+        '200':
+          description: |
+            Elenco di decodifica per l'ASL
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/model_decodifica'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'
+  '/decodifiche/valutazioni-multidimensionali':
+    get:
+      tags:
+        - Decodifiche
+      operationId: getValutazioniMultidimensionali
+      summary: |
+        Elenchi di decodifica delle valutazioni multidimensionali
+      description: |
+        Serve per ottenere gli elenchi di decodifica delle
+        valutazioni multidimensionali (U.V.G. – ANZIANI, o U.M.V.D. – DISABILI)
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+      responses:
+        '200':
+          description: |
+            Elenco di decodifica per valutazioni multidimensionali
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/model_decodifica'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'
+  '/decodifiche/tipi-supporto-familiare':
+    get:
+      tags:
+        - Decodifiche
+      operationId: getTipiSupporto
+      summary: Elenchi di decodifica codice/valore dei tipi di supporto familiare
+      description: |
+        Serve per ottenere gli elenchi di decodifica dei tipi di supporto familiare
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+      responses:
+        '200':
+          description: |
+            Elenco di decodifica per il tipo di supporto familiare
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/model_decodifica'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'
+  '/decodifiche/tipi-documento-rendicontazione':
+    get:
+      tags:
+        - Decodifiche
+      operationId: getTipiDocumentoRendicontazione
+      summary: Elenchi di decodifica codice/valore dei tipi di documento per la rendicontazione
+      description: |
+        Serve per ottenere gli elenchi di decodifica dei tipi di documento per la rendicontazione
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+      responses:
+        '200':
+          description: |
+            Elenco di decodifica per il tipo di documento per la rendicontazione
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/model_decodifica'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'
+  '/decodifiche/tipi-allegato-buono':
+    get:
+      tags:
+        - Decodifiche
+      operationId: getTipiAllegatoBuono
+      summary: Elenchi di decodifica dei tipi di allegato per contratto o rendicontazione
+      description: |
+        Serve per ottenere gli elenchi di decodifica dei tipi di allegato per contratto o rendicontazione
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+      responses:
+        '200':
+          description: |
+            Elenco di decodifica per il tipo di allegato per contratto o rendicontazione
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/model_decodifica'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'
+  '/decodifiche/tipi-dettaglio-documento-spesa':
+    get:
+      tags:
+        - Decodifiche
+      operationId: getTipiDettaglioDocumentoSpesa
+      summary: Elenchi di decodifica dei tipi di dettaglio per il documento di spesa
+      description: |
+        Serve per ottenere gli elenchi di decodifica dei tipi di dettaglio per il documento di spesa
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/header_x_forwarded_for'
+        - $ref: '#/parameters/header_x_codice_servizio'
+        - $ref: '#/parameters/header_shib_identita_codice_fiscale'
+      responses:
+        '200':
+          description: |
+            Elenco di decodifica per il tipo di dettaglio per il documento di spesa
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/model_decodifica'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'
+parameters:
+  header_content_type:
+    in: header
+    name: Content-Type
+    description: 
+      MIME Type del file che viene catricato come allegato
+    type: string
+    enum:
+      - document/pdf
+      - image/jpeg
+      - image/png
+    required: true
+  header_shib_identita_codice_fiscale:
+    in: header
+    name: Shib-Identita-CodiceFiscale
+    description: 
+      Contiene il codice fiscale dell'utente loggato ottenuto tramite shibboleth
+    type: string
+    required: true
+  header_x_request_id:
+    in: header
+    name: X-Request-Id
+    description: >-
+      Contiene un id univoco (`uuid v4`) della chiamata HTTP che viene generato
+      dal front-end, viene propagato agli strati successivi e viene restituito
+      al front-end assieme alla response, permettendo così di tracciare l'intero
+      ciclo di vita della richiesta
+    type: string
+    required: true
+  header_x_forwarded_for:
+    in: header
+    name: X-Forwarded-For
+    description: |
+      Contiene l'elenco degli ip che hanno gestito la richiesta.
+      Utile per i log e l'audit.
+      Il formato della stringa è
+      ```
+      <ip-front-end>, <ip-primo-server>, ..., <ip-ultimo-server>
+      ```
+      Es. `10.10.10.10, 10.38.45.68, 10.128.69.244`
+    type: string
+    required: true
+  header_x_codice_servizio:
+    in: header
+    name: X-Codice-Servizio
+    description: 
+      Contiene una stringa identificativa del servizio chiamante (es.COD)
+    type: string
+    required: true
+  header_x_codice_verticale:
+    in: header
+    name: X-Codice-Verticale
+    description: 
+      Contiene una stringa identificativa del verticale chiamante (es.COD)
+    type: string
+    required: true
+  header_x_filename_originale:
+    in: header
+    name: X-Filename-Originale
+    description: 
+      Il nome del file caricato dall'utente + tipo allegato (nella GET)
+    type: string
+    required: true
+  path_numero_richiesta:
+    in: path
+    name: numero_richiesta
+    type: string
+    required: true
+    description: Il numero della richiesta
+  path_id_contratto:
+    in: path
+    name: id_contratto
+    type: integer
+    required: true
+    description: l'ID del contratto
+  path_id_documento_spesa:
+    in: path
+    name: id_documento_spesa
+    type: integer
+    required: true
+    description: l'ID del docoumento di spesa
+  path_id_allegato:
+    in: path
+    name: id_allegato
+    type: integer
+    required: true
+    description: l'ID dell'allegato contratto o docoumento di rendicontazione
+  path_cf:
+    in: path
+    name: cf
+    type: string
+    required: true
+    description: Il codice fiscale del cittadino
+  path_tipo_allegato:
+    in: path
+    name: tipo_allegato
+    type: string
+    enum: 
+      - DOMANDA
+      - DELEGA
+      - CARTA_IDENTITA
+      - CONTRATTO_LAVORO
+      - CONTRATTO_LAVORO_COOP
+      - DENUNCIA_INPS
+    required: true
+    description: 
+      Il tipo di allegato (codice)
+  body_richiesta:
+    in: body
+    name: richiesta
+    required: true
+    schema:
+      $ref: '#/definitions/model_richiesta'
+  body_bozza_richiesta:
+    in: body
+    name: richiesta
+    required: true
+    schema:
+      $ref: '#/definitions/model_bozza_richiesta'
+  body_contratto:
+    in: body
+    name: contratto
+    required: true
+    schema:
+      $ref: '#/definitions/model_contratto'
+  body_accredito:
+    in: body
+    name: accredito
+    required: true
+    schema:
+      $ref: '#/definitions/model_accredito'
+  body_contratto_allegati:
+    in: body
+    name: contratto_allegati
+    required: true
+    schema:
+      $ref: '#/definitions/model_contratto_allegati'
+  body_documento_spesa:
+    in: body
+    name: documento_spesa
+    required: true
+    schema:
+      $ref: '#/definitions/model_documento_spesa'
+  body_sabbatici:
+    in: body
+    name: sabbatici
+    required: true
+    schema:
+      $ref: '#/definitions/model_sabbatici'
+  body_stato:
+    in: body
+    name: stato
+    required: true
+    description: codice stato della richiesta
+    schema:
+      type: string
+      enum:
+        - INVIATA
+        - RETTIFICATA
+        - RINUNCIATA
+        - RINUNCIA_BUONO
+      description: codice stato della richiesta
+  body_allegato:
+    in: body
+    name: allegato
+    required: true
+    description: file allegato
+    schema:
+      type: string
+      format: binary
+      description: file in formato binario
+
+responses:
+  BadRequest:
+    description: |
+      La richiesta fatta dal client è errata. Ad esempio non sono stati passati
+      tutti i campi obbligatori, uno dei campi è di un tipo non valido, ecc.
+    headers:
+      X-Request-ID:
+        type: string
+        description: Ritorno del parametro ricevuto nella request.
+    schema:
+      $ref: '#/definitions/errore'
+  Forbidden:
+    description: |
+      L'utente non ha i permessi necessari per visualizzare queste risorse.
+      Ad esempio un utente che sta provando ad ottenere il dettaglio di una 
+      richiesta effettuata da un altro utente.
+    headers:
+      X-Request-ID:
+        type: string
+        description: Ritorno del parametro ricevuto nella request.
+    schema:
+      $ref: '#/definitions/errore'
+  NotFound:
+    description: |
+      La risorsa cercata non è stata trovata.
+      Questo errore viene restituito quando si prova ad accedere alla singola 
+      risorsa e questa non esiste.
+      Nel caso in cui si prova ad ottenere una lista e non ci sono
+      elementi, restituire 200 con un array vuoto
+    headers:
+      X-Request-ID:
+        type: string
+        description: Ritorno del parametro ricevuto nella request.
+    schema:
+      $ref: '#/definitions/errore'
+  Conflict:
+    description: |
+      La richiesta non può essere creata perchè è già presente una richiesta
+      con lo stesso destinatario ed uno stato diverso da ANNULLATA
+    headers:
+      X-Request-ID:
+        type: string
+        description: Ritorno del parametro ricevuto nella request.
+    schema:
+      $ref: '#/definitions/errore'
+  UnsupportedMediaType:
+    description: |
+      Il Content-Type della richiesta non è suppportato
+    headers:
+      X-Request-ID:
+        type: string
+        description: Ritorno del parametro ricevuto nella request.
+    schema:
+      $ref: '#/definitions/errore'
+  UnprocessableEntity:
+    description: |
+      La richiesta non può essere creata perchè non è soddisfatto un requisito
+      di business (es. il destinatario non è residente in Piemonte)
+    headers:
+      X-Request-ID:
+        type: string
+        description: Ritorno del parametro ricevuto nella request.
+    schema:
+      $ref: '#/definitions/errore'
+  InternalServerError:
+    description: |
+      Si è verificato un'errore interno del server. 
+      (es. null pointer exception, connessione al DB saltata ecc)
+    headers:
+      X-Request-ID:
+        type: string
+        description: Ritorno del parametro ricevuto nella request.
+    schema:
+      $ref: '#/definitions/errore'
+
+definitions:
+  model_info_servizio:
+    title: 'Info servizio'
+    type: object
+    properties:
+      nome:
+        type: string
+        description: nome del servizio
+      descrizione:
+        type: string
+        description: descrizione del servizio
+      data:
+        type: string
+        format: date
+      servizio_attivo:
+        type: boolean
+        description: boolean di utilita per eventuali test
+  model_contatti:
+    title: 'Contatti'
+    type: object
+    properties:
+      user_id:
+        type: string
+        description: CF dell'utente
+      sms:
+        type: string
+      phone:
+        type: string
+      email:
+        type: string
+        description: email dell'utente
+  model_preferenze:
+    title: 'Preferenze'
+    type: object
+    properties:
+      channels:
+        type: array
+        items:
+          type: string
+          description: canale attivato
+  model_sportello:
+    title: 'Sportello'
+    type: object
+    properties:
+      data_inizio:
+        type: string
+        format: date-time
+      data_fine:
+        type: string
+        format: date-time
+      in_corso:
+        type: boolean
+        description: indica se lo sportello è quello corrente
+  model_anteprima_richiesta:
+    title: 'Richiesta buono (anteprima)'
+    type: object
+    properties:
+      protocollo:
+          $ref: '#/definitions/model_protocollo'
+      numero:
+        type: string
+        description: il numero della richiesta
+      stato:
+        $ref: '#/definitions/model_stato_domanda'
+      data_aggiornamento:
+        type: string
+        format: date-time
+        description: data di ultimo aggiornamento della richiesta
+      richiedente:
+        $ref: '#/definitions/model_persona'
+      destinatario:
+        $ref: '#/definitions/model_persona'
+      note:
+        type: string
+        description:
+          eventuali note a cura dell'operatore
+          (es. in caso di attesa rettifica)
+  model_bozza_richiesta:
+    title: 'Richiesta buono (bozza)'
+    type: object
+    properties:
+      richiedente:
+        $ref: '#/definitions/model_persona'
+      destinatario:
+        $ref: '#/definitions/model_persona'
+      note:
+        type: string
+        description:
+          eventuali note a cura dell'operatore
+          (es. in caso di attesa rettifica)
+      studio_destinatario:
+        type: string
+        example: "DIPLOMA_PRIMO_GRADO"    
+        description: |
+          titolo di studio del destinatario 
+          (codice ottenuto dal servizio decodifiche)
+          può assumere uno dei seguenti valori:
+            - DIPLOMA_PRIMO_GRADO
+            - DIPLOMA_SECONDO_GRADO
+            - DIPLOMA_TERZIARIA
+      lavoro_destinatario:
+        type: boolean
+        description: 
+          il destinatario è lavorativamente attivo? 
+          (da popolare se l'età del destinatario è compresa tra 18 e 65 anni)
+      domicilio_destinatario:
+        type: object
+        properties:
+          indirizzo:
+            type: string
+            description: indirizzo del domicilio
+          comune:
+            type: string
+            description: comune del domicilio
+          provincia:
+            type: string
+            minLength: 2
+            maxLength: 2
+            description: sigla della provincia (maiuscolo)
+      asl_destinatario:
+        type: string
+        description: codice ASL di appartenenza del destinatario
+      delega:
+        type: string
+        example: "POTESTA_GENITORIALE" 
+        description: |
+          eventuale relazione fra richiedente e destinatario
+          (codice ottenuto dal servizio decodifiche)
+          può assumere uno dei seguenti valori:
+            - POTESTA_GENITORIALE
+            - NUCLEO_FAMILIARE
+            - CONIUGE
+            - PARENTE_PRIMO_GRADO
+            - TUTELA
+            - CURATELA
+            - AMMINISTRATORE_SOSTEGNO
+            - ALTRO
+  model_richiesta:
+    title: 'Richiesta buono (dettaglio)'
+    type: object
+    properties:
+      protocollo:
+        $ref: '#/definitions/model_protocollo'
+      numero:
+        type: string
+        description: il numero della richiesta
+      stato:
+        $ref: '#/definitions/model_stato_domanda'
+      data_aggiornamento:
+        type: string
+        format: date-time
+        description: data di ultimo aggiornamento della richiesta
+      richiedente:
+        $ref: '#/definitions/model_persona'
+      destinatario:
+        $ref: '#/definitions/model_persona'
+      note:
+        type: string
+        description:
+          eventuali note a cura dell'operatore 
+          (es. in caso di attesa rettifica)
+      note_richiedente:
+        type: string
+        description:
+          eventuali note a cura del cittadino
+          (es. in caso di controdeduzioni)
+      studio_destinatario:
+        type: string
+        example: "DIPLOMA_PRIMO_GRADO"    
+        description: | 
+          titolo di studio del destinatario 
+          (codice ottenuto dal servizio decodifiche)
+          può assumere uno dei seguenti valori:
+            - DIPLOMA_PRIMO_GRADO
+            - DIPLOMA_SECONDO_GRADO
+            - DIPLOMA_TERZIARIA
+      lavoro_destinatario:
+        type: boolean
+        description: 
+          il destinatario è lavorativamente attivo? 
+          (da popolare se l'età del destinatario è compresa tra 18 e 65 anni)
+      domicilio_destinatario:
+        type: object
+        properties:
+          indirizzo:
+            type: string
+            description: indirizzo del domicilio
+          comune:
+            type: string
+            description: comune del domicilio
+          provincia:
+            type: string
+            minLength: 2
+            maxLength: 2
+            description: sigla della provincia (maiuscolo)
+      asl_destinatario:
+        type: string
+        description: codice ASL di appartenenza del destinatario
+      delega:
+        type: string
+        example: "POTESTA_GENITORIALE" 
+        description: |
+          eventuale relazione fra richiedente e destinatario
+          (codice ottenuto dal servizio decodifiche)
+          può assumere uno dei seguenti valori:
+            - POTESTA_GENITORIALE
+            - NUCLEO_FAMILIARE
+            - CONIUGE
+            - PARENTE_PRIMO_GRADO
+            - TUTELA
+            - CURATELA
+            - AMMINISTRATORE_SOSTEGNO
+            - ALTRO
+      attestazione_isee:
+        type: boolean
+        description: ISEE inferiore a 50k (65k per minori/disabili)
+      punteggio_bisogno_sociale:
+        type: number
+        minimum: 7
+        description: dichiarazione di bisogno sociale pari a...
+      valutazione_multidimensionale:
+        type: string
+        description: 
+          codice della tipologia valutazione multidimensionale (UVG o UMVD)
+      contratto:
+        $ref: '#/definitions/model_contratto'
+      nessuna_incompatibilita:
+        type: boolean
+        description: 
+          true nessuna incompatibilità (o impegno a rimuovere incompatibilità)
+          false domanda non accettabile se non in bozza
+      accredito:
+        type: object
+        properties:
+          iban:
+            type: string
+            description: IBAN conto corrente di accredito
+          intestatario:
+            type: string
+            description: intestatario conto corrente di accredito
+      rettificare:
+        description: eventuale elenco campi da rettificare
+        type: array
+        items:
+          type: string
+          description: nome campo da rettificare
+      allegati:
+        type: array
+        items:
+          $ref: '#/definitions/model_allegato'
+  model_accredito:
+    title: Accredito
+    type: object
+    description: dati del conto corrente di accredito
+    properties:
+      iban:
+        type: string
+        description: IBAN conto corrente di accredito
+      intestatario:
+        type: string
+        description: intestatario conto corrente di accredito
+  model_protocollo:
+    title: 'Protocollo'
+    type: object
+    description: Dati di protocollazione se presenti
+    properties:
+      data:
+        type: string
+        format: date-time
+        description: Data di protocollazione
+      numero:
+        type: string
+        description: Numero di protocollo
+      tipo:
+        type: string
+        description: Tipo di protocollo
+  model_stato_domanda:
+    title: 'Stato domanda'
+    type: string
+    example: "BOZZA"
+    description: |
+      codice stato della richiesta,
+      può assumere uno dei seguenti valori:
+        - BOZZA
+        - INVIATA
+        - AMMESSA
+        - NON_AMMESSA
+        - DA_RETTIFICARE
+        - IN_RETTIFICA
+        - RETTIFICATA
+        - AMMESSA_RISERVA
+        - REVOCATA
+        - ANNULLATA
+        - PERFEZIONATA
+        - DINIEGO
+        - PREAVVISO_DINIEGO
+        - PRESA_IN_CARICO
+        - IN_PAGAMENTO
+  model_contratto:
+    title: 'Contratto'
+    type: object
+    properties:
+      id:
+        type: integer
+        description: id per riferimento (non presente nel body della POST e nella domanda)
+      tipo:
+        type: string
+        description:
+          tipologia di contratto (codice ottenuto da servizio decodifiche)
+      intestatario:
+        $ref: '#/definitions/model_persona_sintesi'
+      relazione_destinatario:
+        type: string
+        example: "POTESTA_GENITORIALE" 
+        description: |
+          eventuale relazione tra destinatario ed intestatario del contratto
+          (codice ottenuto da servizio decodifiche)
+          può assumere uno dei seguenti valori:
+            - POTESTA_GENITORIALE
+            - NUCLEO_FAMILIARE
+            - CONIUGE
+            - PARENTE_PRIMO_GRADO
+            - TUTELA
+            - CURATELA
+            - AMMINISTRATORE_SOSTEGNO
+            - ALTRO
+      assistente_familiare:
+        $ref: '#/definitions/model_persona_sintesi'
+      piva_assitente_familiare:
+        type: string
+        description: presente solo per tipo di contratto partita iva
+      tipo_supporto_familiare:
+        type: string
+        description: ASSISTENTE_FAMILIARE oppure EDUCATORE_PROFESSIONALE
+      data_inizio:
+        type: string
+        format: date-time
+        description:
+          dal frontend viene popolato come YYYY-MM-DD
+          non presente solo quando incompatibilita_per_contratto è true
+      data_fine:
+        type: string
+        format: date-time
+        description:
+          dal frontend viene popolato come YYYY-MM-DD
+          non presente solo quando incompatibilita_per_contratto è true
+      agenzia:
+        type: object
+        description: 
+          presente solo per tipo di contratto con agenzia/cooperativa
+        properties:
+          cf:
+            type: string
+            description: 
+              codice fiscale dell'agenzia/cooperativa
+      incompatibilita_per_contratto:
+        type: boolean
+        description: 
+          true nessun contratto in essere (ma impegno ad attivarlo)
+          false il contratto esiste
+  model_contratto_allegati:
+    title: 'Contratto con allegati'
+    type: object
+    properties:
+      contratto:
+        $ref: '#/definitions/model_contratto'
+      allegati:
+        type: array
+        items:
+          $ref: '#/definitions/model_allegato'
+  model_fornitore:
+    title: 'Fornitore'
+    type: object
+    properties:
+      id:
+        type: integer
+        description: id per riferimento (non presente nel body della POST)
+      nome:
+        type: string
+        description: nome
+      cognome:
+        type: string
+        description: cognome
+      cf:
+        type: string
+        description: codice fiscale
+      denominazione:
+        type: string
+        description: denominazione azienda
+      piva:
+        type: string
+        description: partita iva
+  model_documento_spesa:
+    title: 'Documento di spesa'
+    type: object
+    properties:
+      id:
+        type: integer
+        description: id per riferimento (non presente nel body della POST)
+      tipologia:
+        type: string
+        description:
+          tipologia di documento di spesa (codice ottenuto da servizio decodifiche)
+      numero:
+        type: string
+        description:
+          numero del documento di spesa
+      id_fornitore:
+        type: integer
+        description: 
+          id del fornitore recuperasto dal servizio
+      dettagli:
+        type: array
+        items:
+          $ref: '#/definitions/model_documento_spesa_dettaglio'
+      mesi:
+        type: array
+        items:
+          type: string
+          pattern: '^\d{4}-\d{2}$'
+          example: "2023-05"
+          description:
+            mese di riferimento del documento di rendicontazione in formato YYYY-MM
+      stato:
+        type: string
+        description:
+          indica se la rendicontaione è stata comunicata/accettata/respinta
+      note:
+        type: string
+        description:
+          note per motivazione di rendicontazione respinta 
+  model_documento_spesa_dettaglio:
+    title: 'Dettaglio documento di spesa'
+    type: object
+    properties:
+      id_allegato:
+        type: integer
+        description: 
+          id dell'allegato
+      tipo:
+        type: string
+        description:
+          tipo di allegato (giustificativo/quietanza)
+          codice ottenuto dal servizio di decodifica
+        example: "GIUSTIFICATIVO"
+      importo:
+        type: number
+        multipleOf: 0.01
+        description:
+          importo dell'allegato (in euro)
+      data:
+        type: string
+        format: date
+        description:
+          data dell'allegato
+          dal frontend viene popolato come YYYY-MM-DD
+  model_fruizione:
+    title: 'Periodo di fruizione, rendicontazione e mesi sabbatici'
+    type: object
+    properties:
+      fruizione:
+        type: object
+        description: periodo di fruizione del buono (24 mesi)
+        properties:
+          data_inizio:
+            type: string
+            format: date
+          data_fine:
+            type: string
+            format: date
+      rendicontazione:
+        type: object
+        description: periodo di rendicontazione attuale (3 mesi)
+        properties:
+          data_inizio:
+            type: string
+            format: date
+          data_fine:
+            type: string
+            format: date
+      sabbatici:
+        type: array
+        description: eventuali mesi sabbatici (massimo due elementi)
+        items:
+          type: string
+          pattern: '^\d{4}-\d{2}$'
+          example: "2023-05"
+      non_rendicontati:
+        type: array
+        description: eventuali mesi non ancora rendicontati nei periodi di rendicontazione precedenti
+        items:
+          type: string
+          pattern: '^\d{4}-\d{2}$'
+          example: "2023-04"
+  model_sabbatici:
+    title: 'Mesi sabbatici'
+    type: object
+    properties:
+      sabbatici:
+        type: array
+        description: eventuali mesi sabbatici (massimo due elementi)
+        items:
+          type: string
+          pattern: '^\d{4}-\d{2}$'
+          example: "2023-05"
+  model_allegato:
+    title: 'Allegato'
+    type: object
+    properties:
+      allegato_id:
+        type: integer
+        description: ID allegato (necessario solo per allegato buono)
+      tipo:
+        type: string
+        example: "CARTA_IDENTITA"
+        description: |
+          tipo di allegato,
+          può assumere uno dei seguenti valori:
+            - DOMANDA
+            - DELEGA
+            - CARTA_IDENTITA
+            - CONTRATTO_LAVORO
+            - CONTRATTO_LAVORO_COOP
+            - DENUNCIA_INPS
+      filename:
+        type: string
+        description: nome file originale dell'allegato
+  model_cronologia:
+    title: 'Cronologia cambi di stato'
+    type: object
+    properties:
+      numero:
+        type: string
+        description: numero della richiesta
+      stato:
+        $ref: '#/definitions/model_stato_domanda'
+      data_aggiornamento:
+        type: string
+        format: date-time
+        description: data di aggiornamento dello stato della richiesta
+      note:
+        type: string
+        description: eventuali note
+  model_persona_sintesi:
+    title: 'Persona (senza dettaglio residenza)'
+    type: object
+    properties:
+      cf:
+        type: string
+        description: codice fiscale
+      nome:
+        type: string
+        description: nome
+      cognome:
+        type: string
+        description: cognome
+      data_nascita:
+        type: string
+        format: date
+      stato_nascita:
+        type: string
+        example: 'ITALIA'
+        description: nome nazione (maiuscolo)
+      comune_nascita:
+        type: string
+        example: 'TORINO'
+        description: comune di nascita (maiuscolo)
+      provincia_nascita:
+        type: string
+        minLength: 2
+        maxLength: 2
+        example: 'TO'
+        description: sigla della provincia (maiuscolo)
+  model_persona:
+    title: 'Persona'
+    type: object
+    properties:
+      cf:
+        type: string
+        description: codice fiscale
+      nome:
+        type: string
+        description: nome
+      cognome:
+        type: string
+        description: cognome
+      data_nascita:
+        type: string
+        format: date
+      stato_nascita:
+        type: string
+        example: 'ITALIA'
+        description: nome nazione (maiuscolo)
+      comune_nascita:
+        type: string
+        example: 'TORINO'
+        description: comune di nascita (maiuscolo)
+      provincia_nascita:
+        type: string
+        minLength: 2
+        maxLength: 2
+        example: 'TO'
+        description: sigla della provincia (maiuscolo)
+      data_decesso:
+        type: string
+        format: date
+        description: 
+          non presente per le persone attualmente in vita
+      indirizzo_residenza:
+        type: string
+        description: indirizzo di residenza
+      comune_residenza:
+        type: string
+        description: comune di residenza
+      provincia_residenza:
+        type: string
+        minLength: 2
+        maxLength: 2
+        example: 'TO'
+        description: sigla della provincia (maiuscolo)
+  model_decodifica:
+    title: Decodifica
+    type: object
+    properties:
+      codice:
+        type: string
+        example: "CHIAVE"      
+        description: |
+          codice utilizzato internamente, 
+          per esempio:
+            - BOZZA
+            - INVIATA
+            - AMMESSA
+            - NON_AMMESSA
+            - DA_RETTIFICARE
+            - IN_RETTIFICA
+            - RETTIFICATA
+            - AMMESSA_RISERVA
+            - REVOCATA
+            - ANNULLATA
+            - PERFEZIONATA
+            - DINIEGO
+            - PREAVVISO_DINIEGO
+            - PRESA_IN_CARICO
+            - IN_PAGAMENTO
+      etichetta:
+        type: string
+        example: "Valore"   
+        description: |
+          etichetta esposta all'utente,
+          per esempio:
+            - Bozza
+            - Inviata
+            - Ammessa
+            - Non ammessa
+            - Da rettificare
+            - In Rettifica
+            - Rettificata
+            - Ammessa con riserva
+            - Revocata
+            - Annullata
+            - Perfezionata
+            - Diniego
+            - Preavviso di diniego
+            - Presa in carico
+            - In pagamento
+  model_decodifica_rapporto:
+    title: Decodifica rapporto
+    type: object
+    properties:
+      codice:
+        type: string
+        example: CONIUGE
+        description: codice utilizzato internamente
+      etichetta:
+        type: string
+        example: Coniuge o parte dell'unione civile non conviventi
+        description: etichetta esposta all'utente
+      allegato:
+        type: array
+        items:
+          type: object
+          properties:
+            allegato_tipo_cod:
+              type: string
+              description: indica l'allegato richiesto
+            allegato_obbligatorio:
+              type: boolean
+              description: indica se l'allegato è obbligatorio o opzionale
+  errore:
+    title: '[ERRORE] Generico'
+    type: object
+    properties:
+      status:
+        type: integer
+      code:
+        type: string
+        description: Codice univoco di errore interno
+      title:
+        type: string
+        description: Testo dell'errore da mostrare al cittadino
+      detail:
+        type: array
+        items:
+          $ref: '#/definitions/errore_dettaglio'
+      links:
+        type: array
+        items:
+          type: string
+  errore_dettaglio:
+    title: '[ERRORE] Dettaglio'
+    type: object
+    properties:
+      chiave:
+        type: string
+        description: Codice univoco di errore interno
+      valore:
+        type: string
+        description: Testo dell'errore da mostrare al cittadino

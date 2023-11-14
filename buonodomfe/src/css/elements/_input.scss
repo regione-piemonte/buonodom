@@ -1,0 +1,98 @@
+.q-radio {
+  padding-bottom: 25px;
+}
+
+// textarea di controdeduzione con un'altezza minima diversa da default
+#controdeduzione {
+  min-height: 250px;
+}
+
+
+.check-radio {
+  &--month {
+    &--col {
+      width: 100%;
+      // @media (min-width: $breakpoint-md-min) {
+      //   .check-radio--month--cell {
+      //     padding-right: 15px;
+      //   }
+      // }
+    }
+
+    &--cell {
+      height: 100%;
+
+
+
+      .q-checkbox, .q-radio {
+        width: 100%;
+        border: 3px solid $primary-color;
+        padding-top: 15px;
+        padding-bottom: 15px;
+
+        &.disabled {
+          border-color: $grey;
+          background-color: $grey;
+        }
+
+        &[aria-checked="true"] {
+          background-color: $blue-300;
+
+          .q-checkbox__label, .q-radio__label {
+            font-weight: bold;
+          }
+        }
+      }
+    }
+  }
+}
+
+.page--calendar {
+  .q-option-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .q-checkbox, .q-radio {
+    width: 148px;
+    padding-right: 14%;
+    padding-left: 10px;
+    margin-bottom: 25px;
+
+    .q-checkbox__label, .q-radio__label{
+      text-transform: uppercase;
+    }
+  }
+  // &.page--calendar-documentation {
+  //   .q-checkbox {
+  //     padding-right: 25px;
+  //   }
+  // }
+}
+
+$grids-structure: (0px 1,
+  400px 2,
+  768px 3,
+  992px 5,
+  1200px 5 3%);
+
+.page--calendar-grid {
+  .q-option-group {
+    .q-checkbox {
+      width: 100%;
+    }
+    
+    display: grid;
+    @for $i from 1 through length($grids-structure) {
+      $item: nth($grids-structure, $i);
+      $size: nth($item, 1);
+      $number: nth($item, 2);
+      $gap: if(length($item) > 2, nth($item, 3), 1%);
+      
+      @media (min-width: $size) {
+        grid-template-columns: repeat($number, 1fr);
+        grid-column-gap: $gap;
+      }
+    }
+  }
+}

@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Domanda" language="groovy" pageWidth="595" pageHeight="822" columnWidth="575" leftMargin="10" rightMargin="10" topMargin="10" bottomMargin="10" uuid="164d6a24-5da5-4dae-820a-4cb270867da1">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="288"/>
+	<style name="NoRotate" mode="Transparent" forecolor="#FBE4D5" hAlign="Center" vAlign="Middle" rotation="None" fontName="Times New Roman" fontSize="90"/>
+	<parameter name="DESTINATARIO" class="java.lang.String"/>
+	<parameter name="MESI" class="java.lang.String"/>
+	<parameter name="RICHIEDENTE" class="java.lang.String"/>
+	<parameter name="MENSILITA" class="java.lang.String"/>
+	<parameter name="SESTESSO" class="java.lang.Boolean"/>
+	<parameter name="IMPORTOMENSILE" class="java.lang.String"/>
+	<detail>
+		<band height="802">
+			<rectangle>
+				<reportElement x="20" y="183" width="10" height="10" uuid="aebe65bf-221f-49ae-a57a-c56535b06d1c"/>
+			</rectangle>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="111" y="30" width="433" height="17" uuid="662e52c8-7096-4b20-8916-9c5a9072ad1d"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{RICHIEDENTE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="30" width="92" height="17" uuid="5a6d359c-7c52-4dd0-9ef8-c6f0653358a9"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Il/la sottoscritto/a ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="61" width="525" height="17" uuid="df67b0d5-591f-41a6-a41d-b557c8d4b1f3"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[IN QUALITA' DI]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="91" width="525" height="17" uuid="01e7b355-235a-40d4-90de-5e5cb1d493c7"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[soggetto richiedente IL "BUONO DOMICILIARITA'"]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="123" width="525" height="17" uuid="0b9c6543-44da-4e1f-b75d-002668b5009e"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[ASSEGNATO in favore di (soggetto DESTINATARIO):]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="20" y="153" width="10" height="10" uuid="34973bbd-a8a6-41bd-942b-742a28860f38"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="20" y="153" width="10" height="10" uuid="8cb8b5c6-29e9-4417-8bc4-616095103ecb">
+					<printWhenExpression><![CDATA[$P{SESTESSO}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[X]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="41" y="151" width="45" height="17" uuid="78ee1d41-3a9b-4c70-83f2-c45c3afc0d63"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[sé stesso]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="41" y="181" width="131" height="17" uuid="331ab000-2be7-4bbf-830d-4ea628d7b637"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[altra persona - cognome e nome]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="183" width="10" height="10" uuid="46efb7f0-08dc-4ae5-a672-48a33a99d444">
+					<printWhenExpression><![CDATA[$P{SESTESSO}!=null && !$P{SESTESSO}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[X]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="176" y="179" width="369" height="17" uuid="9292c871-aa42-4dc6-9409-31af7a00276b">
+					<printWhenExpression><![CDATA[$P{SESTESSO}!=null && !$P{SESTESSO}]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{DESTINATARIO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="211" width="525" height="38" uuid="26699dfa-b6dd-4110-8f1c-6e0739456d38"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[consapevole delle sanzioni penali, nel caso di dichiarazioni non veritiere e falsità negli atti, richiamate dagli art. 46, 47, 71, 75, 76 del D.P.R. 445 del 28/12/2000]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="266" width="525" height="17" uuid="5087266d-790c-4c6c-8444-f259c3b96767"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DICHIARA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="295" width="526" height="17" uuid="fd98c150-214e-442c-8d4c-b1c3ce29efa5"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[- che la documentazione giustificativa attestante la fruizione del servizio di assistenza domiciliare attivato per
+ ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="311" width="250" height="17" uuid="f39d19e8-8f46-44e4-896d-a3736c271303"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[l’assegnazione del “BUONO” nel/nei mese/mesi di]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="327" width="250" height="17" uuid="71d7daaf-9da6-4d92-b14e-005a80ca51f4"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[disponibile per eventuali controlli;]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="350" width="525" height="17" uuid="5ab5e5a4-680a-437a-9b0d-52b0f1608c9e"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[- di avere rispettato le condizioni e le modalità di fruizione del “Buono domiciliarità”.]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="269" y="311" width="276" height="17" uuid="7cbf326f-44a9-456d-8921-c44664961609"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{MESI}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="380" width="525" height="17" uuid="a2cc8e65-480b-4983-82aa-056bf52a2d29"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CHIEDE]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="156" y="429" width="390" height="17" uuid="b568929c-d4cb-4721-bd6a-e6a4eed15a4d"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{MENSILITA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="429" width="137" height="17" uuid="d54b7f00-7354-437b-8aee-575e8913a74d"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[riferimento alle mensilità di ]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="20" y="410" width="525" height="17" uuid="cf9b6361-9ca7-4a2b-bbf6-8a3e0007fa83"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["la liquidazione del controvalore economico del “buono” per un importo pari a € " +$P{IMPORTOMENSILE} +" al mese con"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

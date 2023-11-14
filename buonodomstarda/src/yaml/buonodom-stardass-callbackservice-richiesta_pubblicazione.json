@@ -1,0 +1,55 @@
+{
+  "provider": "admin",
+  "destinationStatsEnabled": null,
+  "isDefaultVersion": false,
+  "type": "HTTP",
+  "transport": [
+    "http",
+    "https"
+  ],
+  "tiers": [
+    "Unlimited"
+  ],
+  "maxTps": null,
+  "visibility": "PUBLIC",
+  "visibleRoles": [],
+  "visibleTenants": [],
+  "accessControl": "NONE",
+  "accessControlRoles": [],
+  "apiLevelPolicy": null,
+  "authorizationHeader": null,
+  "apiSecurity": "oauth2",
+  "endpointConfig": {
+    "endpoint_type": "http",
+    "production_endpoints": {
+      "url": "http://tst-xxx.xxx/buonodomstarda/api/v1/",
+      "config": null
+    }
+  },
+  "endpointSecurity": {
+    "username": "user_apimanager",
+    "password": "mypass",
+    "type": "basic"
+  },
+  "gatewayEnvironments": "Production and Sandbox",
+  "sequences": [],
+  "subscriptionAvailability": null,
+  "subscriptionAvailableTenants": [],
+  "businessInformation": {
+    "businessOwner": "Lucia Favella",
+    "businessOwnerEmail": "lucia.favella@csi.it",
+    "technicalOwner": "Egidio Bosio",
+    "technicalOwnerEmail": "egidio.bosio@csi.it"
+  },
+  "additionalProperties": {
+    "institution": "Regione Piemonte",
+    "api_product_id": "buonodom-buonodomstarda-regp"
+  },
+  "tags": [
+    "regionepiemonte",
+    "cittadino",
+    "a2c",
+    "exp",
+    "Socioassist-group"
+  ]
+}

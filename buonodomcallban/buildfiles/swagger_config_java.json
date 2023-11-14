@@ -1,0 +1,18 @@
+{
+"java8": false,
+"useBeanValidation": true,
+"hideGenerationTimestamp": true,
+"apiPackage": "it.csi.buonodom.buonodomcallban.business.be",
+"modelPackage":  "it.csi.buonodom.buonodomcallban.dto",
+"invokerPackage": "it.csi.buonodom.buonodomcallban.business.be",
+"implFolder": "implfolder",
+"sourceFolder": "src/java",
+"useSwaggerFeature": false,
+"generateJbossDeploymentDescriptor": false,
+"generateImplArtifacts": true,
+"generateSwaggerMetadata": false,
+"attributeSerializationStrategy": "explicit-as-modeled", 
+"accessHttpHeaders": true,
+"accessHttpRequest": true,
+"jsonLibrary": "fasterxml-jackson"
+}

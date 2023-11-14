@@ -1,0 +1,80 @@
+/*
+colori disponibili per i button
+positive: $green
+negative: $red
+primary: $blue
+--
+versioni possibili
+outline
+flat
+*/
+
+.q-btn {
+  &:not(.q-btn--flat):not(.q-btn--round) {
+    min-width: 200px;
+    width: auto;
+  }
+  // &:not(:first-child) {
+  //   margin-left: 15px;
+  // }
+
+
+
+
+  &.bg-primary {
+    background-color: $blue!important;
+  }
+  &.bg-negative {
+    background-color: $red!important;
+  }
+  &.bg-positive {
+    background-color: $green!important;
+  }
+}
+
+.btn--flat {
+  color: $primary;
+  font-weight: bold;
+  text-decoration: none;
+  @include rfs(16px);
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.btn--openapplication {
+  height: 37px;
+  .q-btn__wrapper {
+    padding: 0px;
+    font-weight: bold;
+  }
+}
+
+.q-item__section--main~.q-item__section--side {
+  color: $primary;
+}
+
+.q-card {
+  .q-btn.q-btn--standard {
+    min-width: auto;
+    &.btn--custom {
+      min-width: 250px;
+    }
+  }
+}
+
+.cicle-timelapse {
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  &.circle--primary {
+    background-color: $primary-color;
+  }
+  &.circle--disabled {
+    background-color: $grey;
+  }
+}
+
+.q-tooltip {
+  text-transform: uppercase;
+}

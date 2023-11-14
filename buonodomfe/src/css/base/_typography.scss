@@ -1,0 +1,16 @@
+
+h1,h2,h3 {
+  font-weight: bold;
+}
+
+h2 {
+  &.card-title--label {
+    @include font-size(16px);
+  }
+}
+
+.border-left--primary {
+  h3 {
+    @include font-size(16px);
+  }
+}

@@ -1,0 +1,260 @@
+swagger: '2.0'
+info:
+  title: buonodom-stardass-callbackservice
+  version: v1
+  description: "API dedicata all'integrazione di BUONODOM con STARDAS per la callback"
+host: 'tst-api-piemonte.ecosis.csi.it'
+basePath: /socioassis/buonodom-buonodomstarda-regp/v1
+schemes:
+  - http
+produces:
+  - application/json
+consumes:
+  - application/json
+paths:
+  '/servizio-attivo':
+    get:
+      summary: Raggiungibilità
+      description: |
+        Serve per verificare se il servizio risponde o meno
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: |
+            La richiesta è andata a buon fine quindi il servizio è online
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.
+          schema:
+            $ref: '#/definitions/model_info_servizio'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '403':
+          $ref: '#/responses/Forbidden'
+        '500':
+          $ref: '#/responses/InternalServerError'            
+  /callback/esitoSmistaDocumento:
+    post:
+      summary: ''
+      operationId: post-callback-smistaDocumento
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/EsitoSmistaDocumentoResponse'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '403':
+          $ref: '#/responses/Forbidden'
+        '500':
+          $ref: '#/responses/InternalServerError'            
+      description: Smista documento - esito prima esecuzione
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/EsitoSmistaDocumentoRequest'
+    put:
+      summary: ''
+      operationId: put-callback-smistaDocumento
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/EsitoSmistaDocumentoResponse'
+        '400':
+          $ref: '#/responses/BadRequest'
+        '403':
+          $ref: '#/responses/Forbidden'
+        '500':
+          $ref: '#/responses/InternalServerError'                        
+      description: Smista documento - esito successive esecuzioni
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/EsitoSmistaDocumentoRequest'
+    parameters: []
+responses:
+  BadRequest:
+    description: >-
+      La richiesta fatta dal client è errata. Ad esempio non sono stati passati
+      tutti i campi obbligatori, uno dei campi è di un tipo non valido,
+      formattazione dei filtri errata ecc.
+    headers:
+      X-Request-ID:
+        type: string
+        description: Ritorno del parametro ricevuto nella request.
+    schema:
+      $ref: '#/definitions/errore'
+  Forbidden:
+    description: >-
+      L'utente non ha i permessi necessari per visualizzare queste risorse. <br>
+      Ad esempio un utente che sta provando ad ottenere le ricette di un altro
+      utente senza averne la delega.
+    headers:
+      X-Request-ID:
+        type: string
+        description: Ritorno del parametro ricevuto nella request.
+    schema:
+      $ref: '#/definitions/errore'
+  NotFound:
+    description: >-
+      La risorsa cercata non è stata trovata. <br> Questo errore viene
+      restituito quando si prova ad accedere alla singola risorsa e questa non
+      esiste. <br> Nel caso in cui si prova ad ottenere una lista e non ci sono
+      elementi, restituire 200 con un array vuoto
+    headers:
+      X-Request-ID:
+        type: string
+        description: Ritorno del parametro ricevuto nella request.
+    schema:
+      $ref: '#/definitions/errore'
+  InternalServerError:
+    description: >-
+      Si è verificato un'errore interno del server. (es. null pointer exception,
+      connessione al DB saltata ecc)    
+definitions:
+  EsitoSmistaDocumentoResponse:
+    title: EsitoSmistaDocumentoResponse
+    type: object
+    properties:
+      esito:
+        $ref: '#/definitions/ResultType'
+  EsitiStepType:
+    title: EsitiStepType
+    type: object
+    properties:
+      esitoStep:
+        type: array
+        items:
+          $ref: '#/definitions/EsitoStep'
+    required:
+      - esitoStep
+  InformazioneType:
+    title: InformazioneType
+    type: object
+    properties:
+      nome:
+        type: string
+        minLength: 1
+        maxLength: 50
+      valore:
+        type: string
+        minLength: 1
+        maxLength: 1500
+  informazioniAggiuntiveType:
+    title: informazioniAggiuntiveType
+    type: object
+    properties:
+      informazione:
+        type: array
+        items:
+          $ref: '#/definitions/InformazioneType'
+    required:
+      - informazione
+  EsitoSmistaDocumentoType:
+    title: EsitoSmistaDocumentoType
+    type: object
+    properties:
+      messageUUID:
+        type: string
+        minLength: 1
+        maxLength: 50
+      idDocumentoFruitore:
+        type: string
+        minLength: 1
+        maxLength: 200
+      tipoTrattamento:
+        type: string
+        minLength: 1
+        maxLength: 50
+      esitiStep:
+        $ref: '#/definitions/EsitiStepType'
+      informazioniAggiuntive:
+        $ref: '#/definitions/informazioniAggiuntiveType'
+      esitoTrattamento:
+        $ref: '#/definitions/ResultType'
+    required:
+      - tipoTrattamento
+  EsitoSmistaDocumentoRequest:
+    title: EsitoSmistaDocumentoRequest
+    type: object
+    properties:
+      esitoSmistaDocumento:
+        $ref: '#/definitions/EsitoSmistaDocumento'
+  EsitoSmistaDocumento:
+    title: EsitoSmistaDocumento
+    type: object
+    properties:
+      esito:
+        $ref: '#/definitions/EsitoSmistaDocumentoType'
+  ResultType:
+    title: ResultType
+    type: object
+    properties:
+      codice:
+        type: string
+      messaggio:
+        type: string
+  EsitoStep:
+    title: EsitoStep
+    type: object
+    properties:
+      nome:
+        type: string
+        minLength: 1
+        maxLength: 200
+      esito:
+        $ref: '#/definitions/ResultType'
+    required:
+      - nome
+      - esito
+  model_info_servizio:
+    title: 'Info servizio'
+    type: object
+    properties:
+      nome:
+        type: string
+        description: nome del servizio
+      descrizione:
+        type: string
+        description: descrizione del servizio
+      data:
+        type: string
+        format: date
+      servizio_attivo:
+        type: boolean
+        description: boolean di utilita per eventuali test      
+  errore:
+    title: '[ERRORE] Generico'
+    type: object
+    properties:
+      status:
+        type: integer
+      code:
+        type: string
+        description: Codice univoco di errore interno
+      title:
+        type: string
+        description: Testo dell'errore da mostrare al cittadino
+      detail:
+        type: array
+        items:
+          $ref: '#/definitions/errore_dettaglio'
+      links:
+        type: array
+        items:
+          type: string
+  errore_dettaglio:
+    title: '[ERRORE] Dettaglio'
+    type: object
+    properties:
+      chiave:
+        type: string
+        description: Codice univoco di errore interno
+      valore:
+        type: string
+        description: Testo dell'errore da mostrare al cittadino

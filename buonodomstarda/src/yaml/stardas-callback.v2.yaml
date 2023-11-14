@@ -1,0 +1,140 @@
+swagger: '2.0'
+info:
+  title: stardas-callback
+  version: '2.0'
+  description: "API dedicata all'integrazione con STARDAS per la callback"
+host: 'localhost:3000'
+schemes:
+  - http
+produces:
+  - application/json
+consumes:
+  - application/json
+paths:
+  /callback/esitoSmistaDocumento:
+    post:
+      summary: ''
+      operationId: post-callback-smistaDocumento
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/EsitoSmistaDocumentoResponse'
+      description: Smista documento - esito prima esecuzione
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/EsitoSmistaDocumentoRequest'
+    put:
+      summary: ''
+      operationId: put-callback-smistaDocumento
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/EsitoSmistaDocumentoResponse'
+      description: Smista documento - esito successive esecuzioni
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/EsitoSmistaDocumentoRequest'
+    parameters: []
+definitions:
+  EsitoSmistaDocumentoResponse:
+    title: EsitoSmistaDocumentoResponse
+    type: object
+    properties:
+      esito:
+        $ref: '#/definitions/ResultType'
+  EsitiStepType:
+    title: EsitiStepType
+    type: object
+    properties:
+      esitoStep:
+        type: array
+        items:
+          $ref: '#/definitions/EsitoStep'
+    required:
+      - esitoStep
+  InformazioneType:
+    title: InformazioneType
+    type: object
+    properties:
+      nome:
+        type: string
+        minLength: 1
+        maxLength: 50
+      valore:
+        type: string
+        minLength: 1
+        maxLength: 1500
+  informazioniAggiuntiveType:
+    title: informazioniAggiuntiveType
+    type: object
+    properties:
+      informazione:
+        type: array
+        items:
+          $ref: '#/definitions/InformazioneType'
+    required:
+      - informazione
+  EsitoSmistaDocumentoType:
+    title: EsitoSmistaDocumentoType
+    type: object
+    properties:
+      messageUUID:
+        type: string
+        minLength: 1
+        maxLength: 50
+      idDocumentoFruitore:
+        type: string
+        minLength: 1
+        maxLength: 200
+      tipoTrattamento:
+        type: string
+        minLength: 1
+        maxLength: 50
+      esitiStep:
+        $ref: '#/definitions/EsitiStepType'
+      informazioniAggiuntive:
+        $ref: '#/definitions/informazioniAggiuntiveType'
+      esitoTrattamento:
+        $ref: '#/definitions/ResultType'
+    required:
+      - tipoTrattamento
+  EsitoSmistaDocumentoRequest:
+    title: EsitoSmistaDocumentoRequest
+    type: object
+    properties:
+      esitoSmistaDocumento:
+        $ref: '#/definitions/EsitoSmistaDocumento'
+  EsitoSmistaDocumento:
+    title: EsitoSmistaDocumento
+    type: object
+    properties:
+      esito:
+        $ref: '#/definitions/EsitoSmistaDocumentoType'
+  ResultType:
+    title: ResultType
+    type: object
+    properties:
+      codice:
+        type: string
+      messaggio:
+        type: string
+  EsitoStep:
+    title: EsitoStep
+    type: object
+    properties:
+      nome:
+        type: string
+        minLength: 1
+        maxLength: 200
+      esito:
+        $ref: '#/definitions/ResultType'
+    required:
+      - nome
+      - esito
+basePath: /fruitore-x

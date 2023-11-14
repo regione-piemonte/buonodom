@@ -1,0 +1,341 @@
+swagger: "2.0"
+info:
+  description: "API per la callback di pbandi"
+  version: 0.0.1
+  title: CALLBACK BANDI
+host: tst-srv-apisan.isan.csi.it
+basePath: /buonobancallba/api/v1
+schemes:
+  - https
+paths:
+  '/servizio-attivo':
+    get:
+      description: >
+        Restituisce informazioni sull'ambiente su cui sta girando il back-end.
+        Es. variabili ambiente, header http ricevuti ecc.
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: |
+            Restituisce un oggetto JSON contenente i dati dell'env su cui sta girando il servizio
+          schema:
+            $ref: '#/definitions/info_servizio'  
+  '/domanda/{numero_domanda}/esito-acquisizione':
+    post:
+      description: >
+        esito dell'acquisizione della domanda
+      parameters:
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/path_numero_domanda'
+        - $ref: '#/parameters/payload_esito_acquisizione'
+      responses:
+        201:
+          description: OK
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.          
+        400:
+         $ref: '#/responses/BadRequest'
+        403:
+         $ref: '#/responses/Forbidden'
+        500:
+         $ref: '#/responses/InternalServerError'            
+    put:
+      description: >
+        esito dell'acquisizione della domanda
+      parameters:
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/path_numero_domanda'
+        - $ref: '#/parameters/payload_esito_acquisizione'
+      responses:
+        204:
+          description: OK
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.          
+        400:
+         $ref: '#/responses/BadRequest'
+        403:
+         $ref: '#/responses/Forbidden'
+        500:
+         $ref: '#/responses/InternalServerError'
+  '/domanda/{numero_domanda}/revoca':
+    put:
+      description: >
+        esito dell'acquisizione della domanda
+      parameters:
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/path_numero_domanda'
+        - $ref: '#/parameters/payload_revoca_domanda'
+      responses:
+        204:
+          description: OK
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.          
+        400:
+         $ref: '#/responses/BadRequest'
+        403:
+         $ref: '#/responses/Forbidden'
+        500:
+         $ref: '#/responses/InternalServerError'
+  '/rendicontazione/{id_dichiarazionespesa_buonodom}/esito-acquisizione':
+    post:
+      description: >
+        esito dell'acquisizione della rendicontazione
+      parameters:
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/path_dichiarazione_rendicontazione'
+        - $ref: '#/parameters/payload_esito_acquisizione_spesa'
+      responses:
+        201:
+          description: OK
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.          
+        400:
+         $ref: '#/responses/BadRequest'
+        403:
+         $ref: '#/responses/Forbidden'
+        500:
+         $ref: '#/responses/InternalServerError'              
+    put:
+      description: >
+        esito dell'acquisizione della rendicontazione
+      parameters:
+        - $ref: '#/parameters/header_x_request_id'
+        - $ref: '#/parameters/path_dichiarazione_rendicontazione'
+        - $ref: '#/parameters/payload_esito_acquisizione_spesa'
+      responses:
+        201:
+          description: OK
+          headers:
+            X-Request-ID:
+              type: string
+              description: Ritorno del parametro ricevuto nella request.          
+        400:
+         $ref: '#/responses/BadRequest'
+        403:
+         $ref: '#/responses/Forbidden'
+        500:
+         $ref: '#/responses/InternalServerError'                    
+parameters:
+  header_shib_identita_codice_fiscale:
+    in: header
+    name: Shib-Identita-CodiceFiscale
+    description: Contiene il codice fiscale dell'utente loggato ottenuto tramite shibboleth
+    type: string
+    required: true
+  header_x_request_id:
+    in: header
+    name: X-Request-Id
+    description: >-
+      Contiene un id univoco (`uuid v4`) della chiamata HTTP che viene generato
+      dal front-end, viene propagato agli strati successivi e viene restituito
+      al front-end assieme alla response, permettendo così di tracciare l'intero
+      ciclo di vita della richiesta
+    type: string
+    required: true
+  header_x_forwarded_for:
+    in: header
+    name: X-Forwarded-For
+    description: |
+      Contiene l'elenco degli ip che hanno gestito la richiesta.
+      Utile per i log e l'audit.
+      Il formato della stringa è
+      ```
+      <ip-front-end>, <ip-primo-server>, ..., <ip-ultimo-server>
+      ```
+      Es. `10.10.10.10, 10.38.45.68, 10.128.69.244`
+    type: string
+    required: true 
+  path_numero_domanda:
+    in: path
+    name: numero_domanda
+    type: string
+    required: true
+    description: numero della domanda
+  path_dichiarazione_rendicontazione:
+    in: path
+    name: id_dichiarazionespesa_buonodom
+    type: string
+    required: true
+    description: numero della rendicontazione    
+  payload_esito_acquisizione_spesa:
+    in: body
+    name: payload_esito_acquisizione_spesa
+    required: true
+    schema: 
+      type: object
+      properties:
+        esito_acquisizione:
+         $ref: '#/definitions/model_esito_acquisizione'
+        documenti:
+          type: array
+          items: 
+            $ref: '#/definitions/model_documento_ricevuto'
+        id_dichiarazione_spesa_bandi:
+          type: string
+          description: id della dichiarazione spesa generato dal sistema bandi
+  payload_esito_acquisizione:
+    in: body
+    name: payload_esito_acquisizione
+    required: true
+    description: |
+      I dati che servono all'acquisizione dell'esito dell'elaborazion del servizio di bandi
+    schema:
+      type: object
+      properties:
+       esito_acquisizione:
+         $ref: '#/definitions/model_esito_acquisizione'
+  payload_revoca_domanda:
+    in: body
+    name: payload_rev_domanda
+    required: true
+    description: |
+      I dati che servono all'acquisizione dell'esito dell'elaborazion del servizio di bandi
+    schema:
+      type: object
+      properties:
+       esito_acquisizione:
+         $ref: '#/definitions/model_domanda'  
+responses:
+  BadRequest:
+    description: >-
+      La richiesta fatta dal client è errata. Ad esempio non sono stati passati
+      tutti i campi obbligatori, uno dei campi è di un tipo non valido,
+      formattazione dei filtri errata ecc.
+    headers:
+      X-Request-ID:
+        type: string
+        description: Ritorno del parametro ricevuto nella request.
+    schema:
+      $ref: '#/definitions/errore'
+  Forbidden:
+    description: >-
+      L'utente non ha i permessi necessari per visualizzare queste risorse. <br>
+      Ad esempio un utente che sta provando ad ottenere le ricette di un altro
+      utente senza averne la delega.
+    headers:
+      X-Request-ID:
+        type: string
+        description: Ritorno del parametro ricevuto nella request.
+    schema:
+      $ref: '#/definitions/errore'
+  NotFound:
+    description: >-
+      La risorsa cercata non è stata trovata. <br> Questo errore viene
+      restituito quando si prova ad accedere alla singola risorsa e questa non
+      esiste. <br> Nel caso in cui si prova ad ottenere una lista e non ci sono
+      elementi, restituire 200 con un array vuoto
+    headers:
+      X-Request-ID:
+        type: string
+        description: Ritorno del parametro ricevuto nella request.
+    schema:
+      $ref: '#/definitions/errore'
+  InternalServerError:
+    description: >-
+      Si è verificato un'errore interno del server. (es. null pointer exception,
+      connessione al DB saltata ecc)
+    headers:
+      X-Request-ID:
+        type: string
+        description: Ritorno del parametro ricevuto nella request.
+    schema:
+      $ref: '#/definitions/errore'        
+definitions:
+  info_servizio:
+    type: object
+    properties:
+      nome:
+        type: string
+        description: nome del servizio
+      descrizione:
+        type: string
+        description: descrizione del servizio
+      data:
+        type: string
+        format: date
+      servizio_attivo:
+        type: boolean
+        description: boolean di utilita per eventuali test
+  model_esito_acquisizione:
+    title: Esito_acquisizione
+    type: object
+    properties:
+      uuid:
+       type: string
+      esito: 
+        type: string
+        description: esito pupo esssere OK o KO in caso di KO verrà vaòorizzato il tag errore
+      errore:
+        $ref: '#/definitions/esito'
+  model_domanda:
+    title: domanda
+    type: object
+    properties:
+      numero_domanda:
+        type: string
+        description: numero della domanda
+      cf_beneficiario:
+        type: string
+        description: codice fiscale del beneficiario
+      cf_richiedente:
+        type: string
+        description: codice fiscale del richiedente
+  model_documento_ricevuto:
+    title: model della ricezione dei documenti 
+    type: object
+    properties:
+      id_documento_buonodom:
+        type: string
+        description: identificativo del documento di spesa su buonodom
+      id_documento_bandi:
+        type: string
+        description: identificativo del documento di spesa su sistema bandi
+  esito:
+    title: esito
+    type: object
+    properties:
+      codice:
+        type: string        
+      messaggio:
+        type: string
+  errore:
+    title: '[ERRORE] Generico'
+    type: object
+    properties:
+      status:
+        type: integer
+      code:
+        type: string
+        description: Codice univoco di errore interno
+      title:
+        type: string
+        description: Testo dell'errore da mostrare al cittadino
+      detail:
+        type: array
+        items:
+          $ref: '#/definitions/errore_dettaglio'
+      links:
+        type: array
+        items:
+          type: string
+  errore_dettaglio:
+    title: '[ERRORE] Dettaglio'
+    type: object
+    properties:
+      chiave:
+        type: string
+        description: Codice univoco di errore interno
+      valore:
+        type: string
+        description: Testo dell'errore da mostrare al cittadino
+
+        

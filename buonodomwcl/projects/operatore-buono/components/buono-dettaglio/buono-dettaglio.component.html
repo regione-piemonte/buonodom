@@ -1,0 +1,326 @@
+<!-- Home -->
+<div class="row buonodom" style="padding-top: 30px">
+  <div class="col-md-1"></div>
+
+  <div class="col-md-2">
+    <button type="button" class="btn btn-link pl-0" (click)="backButton()">
+      <span class="fas fa-chevron-left"></span>
+      <span style="margin-bottom: 10px; margin-left: 10px;"></span>
+      Home
+    </button>
+  </div>
+
+  <div class="col-md-3"></div>
+
+</div>
+
+<!-- Numero buono -->
+<div class="row buonodom" style="padding-top: 30px">
+  <div class="col-md-1"></div>
+
+  <div class="col-md-2">
+    <label class="text-nowrap titlePage">Domanda: {{this.numeroDomanda}}</label>
+  </div>
+
+  <div class="col-md-9"></div>
+</div>
+
+<div class="row buonodom">
+  <div class="col-md-1"></div>
+  <div class="col-md-7 buonodomFilter">
+    <form [formGroup]="cambiaDecorrenzaForm">
+      <!-- Intestazioni -->
+      <h4>Cambia Decorrenza</h4>
+      <div class="row">
+        <div class="col-md-3">
+          <label for="nuovaDataDecorrenzaBuono">Data decorrenza buono:</label>
+        </div>
+        <div class="col-md-3">
+          <label for="dataFineBuono">Data fine buono:</label>
+        </div>
+      </div>
+
+      <!-- Datepicker -->
+      <div class="row">
+        <div class="col-md-3">
+          <input type="month" (input)="calcolaDifferenzaMesi()" id="decorrenzaInizio" formControlName="decorrenzaInizio"
+            class="form-control campiricerca"
+            [min]="this.datePipe.transform(this.decorrenzaBuono.decorrenzaInizio, 'yyyy-MM')">
+        </div>
+        <div class="col-md-3">
+          <input type="month" id="decorrenzaFine" formControlName="decorrenzaFine" class="form-control campiricerca">
+        </div>
+        <div class="col-md-2">
+          <button type="submit" (click)="salvaDecorrenza()" class="btn btn-primary">Salva</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="col-md-4"></div>
+</div>
+
+<!-- Filto periodo -->
+<div class="row buonodom">
+  <div class="col-md-1"></div>
+
+  <div class="col-md-7 buonodomFilter">
+    <!-- Titolo -->
+    <h4>Mese di riferimento del documento</h4>
+
+    <form [formGroup]="periodoRendicontazioneForm">
+      <!-- Intestazioni -->
+      <div class="row pt-1">
+        <div class="col-md-3">
+          <label for="meseInizio">Mese di inizio:</label>
+        </div>
+        <div class="col-md-3">
+          <label for="meseFine">Mese di fine:</label>
+        </div>
+        <div class="col-md-2">
+        </div>
+      </div>
+
+      <!-- Datepicker -->
+      <div class="row">
+        <div class="col-md-3">
+          <input type="month" id="meseInizio" (input)="validazioneDate()" formControlName="meseInizio"
+            class="form-control campiricerca">
+
+        </div>
+        <div class="col-md-3">
+          <input type="month" id="meseFine" (input)="validazioneDate()" formControlName="meseFine"
+            class="form-control campiricerca">
+        </div>
+        <div class="col-md-2">
+          <button type="submit"
+            [disabled]="controlloDataFine || ((meseInizio.dirty || meseInizio.touched)&&meseInizio.invalid) || ((meseFine.dirty || meseFine.touched)&& meseFine.invalid)"
+            (click)="filtraPerPeriodo()" class="btn btn-primary">Filtra</button>
+        </div>
+      </div>
+
+      <!-- Validazione -->
+      <div class="row pb-4">
+        <div class="col-md-3">
+          <ng-container *ngIf="meseInizio.dirty || meseInizio.touched">
+            <ng-container *ngIf="meseInizio.invalid">
+              <ng-container *ngIf="meseInizio.errors.required">
+                <div class="error">
+                  Il campo è obbligatorio
+                </div>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+        </div>
+        <div class="col-md-3">
+          <ng-container *ngIf="meseFine.dirty || meseFine.touched">
+            <ng-container *ngIf="meseFine.invalid">
+              <ng-container *ngIf="meseFine.errors.required">
+                <div class="error">
+                  Il campo è obbligatorio
+                </div>
+              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="controlloDataFine">
+              <ng-container *ngIf="meseInizio.dirty || meseInizio.touched">
+                <div class="error">
+                  La data di fine deve essere maggiore di quella d'inizio
+                </div>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+        </div>
+        <div class="col-md-2">
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="col-md-4"></div>
+</div>
+
+<!-- Documenti di spesa -->
+<div class="row buonodom">
+  <div class="col-md-1"></div>
+
+  <div class="col-md-7 buonodomFilter">
+    <!-- Titolo -->
+    <h4>Documenti di Spesa</h4>
+
+    <!-- Tabella -->
+    <table class="table tabellabuonodom">
+      <!-- Intestazioni -->
+      <thead class="thead">
+        <tr class="row">
+          <th class="col etichette-tabella">Mesi di riferimento</th>
+          <th class="col etichette-tabella">Periodo di rendicontazione</th>
+          <th class="col etichette-tabella">Assistente Familiare CF</th>
+          <th class="col etichette-tabella">Tipo documento</th>
+          <th class="col etichette-tabella">Numero documento</th>
+        </tr>
+      </thead>
+
+      <!-- Documenti spesa -->
+      <tbody>
+        <ng-container *ngFor="let documentoSpesa of this.documentiSpesaFiltrati">
+          <tr class="row" style="border-top: 2px solid #EEEEEE;">
+            <td class="col valori-tabella"><a (click)="documentoSpesa.isExpanded = !documentoSpesa.isExpanded">
+                Dal {{documentoSpesa.periodoInizio | date: 'dd/MM/yyyy'}} 
+                <span *ngIf="documentoSpesa.periodoFine !== null">al {{documentoSpesa.periodoFine | date:'dd/MM/yyyy'}}</span>
+              </a></td>
+            <td class="col valori-tabella">{{getPeriodoRendicontazione(documentoSpesa.idDocSpesa)}}</td>
+            <td class="col valori-tabella">RMNRMN00A12H501M</td>
+            <td class="col valori-tabella">{{replace_(documentoSpesa.doc_tipo)}}</td>
+            <td class="col valori-tabella">{{documentoSpesa.doc_numero}}</td>
+          </tr>
+
+          <!-- Documenti spesa dettaglio -->
+          <ng-container *ngIf="documentoSpesa.isExpanded">
+            <ng-container *ngIf="documentoSpesa.documentiSpesaDettaglio.length>0">
+              <!-- Intestazioni -->
+              <tr class="row">
+                <th class="col etichette-tabella">Data</th>
+                <th class="col etichette-tabella">Importo</th>
+                <th class="col etichette-tabella">Allegati</th>
+              </tr>
+
+              <!-- Valori Dettaglio -->
+              <ng-container *ngFor="let documentoSpesaDettaglio of documentoSpesa.documentiSpesaDettaglio">
+                <tr class="row">
+                  <td class="col valori-tabella">{{documentoSpesaDettaglio.documentoSpesaDettaglioData | date:
+                    'dd/MM/yyyy'}}</td>
+
+                  <td class="col valori-tabella">{{documentoSpesaDettaglio.importo}}&euro;</td>
+
+                  <!-- Allegati -->
+                  <td class="col valori-tabella">
+                    <ng-container *ngIf="documentoSpesaDettaglio.allegati.length>0">
+                      <ng-container *ngFor="let allegato of documentoSpesaDettaglio.allegati">
+                        <a href="{{scaricaAllegato(allegato.allegatoId)}}" target="_blank">
+                          {{replace_(allegato.allegatoTipo)}}
+                        </a>
+                      </ng-container>
+                    </ng-container>
+                  </td>
+                </tr>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+      </tbody>
+    </table>
+
+    <!-- Controllo nessun risultato -->
+    <ng-container *ngIf="documentiSpesaFiltrati">
+      <ng-container *ngIf="documentiSpesaFiltrati.length === 0">
+        <div class="col-12" style="text-align: center;">
+          <label class="no-data-available">Nessun documento di spesa presente nel periodo selezionato</label>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+
+  <div class="col-md-4"></div>
+</div>
+
+<!-- Contratti -->
+<div class="row buonodom">
+  <div class="col-md-1"></div>
+
+  <div class="col-md-7 buonodomFilter">
+    <!-- Titolo -->
+    <h4>Contratti</h4>
+
+    <!-- Tabella -->
+    <table class="table tabellabuonodom">
+      <!-- Intestazioni -->
+      <thead class="thead">
+        <tr class="row">
+          <!-- <th class="col etichette-tabella">Mesi di riferimento</th> -->
+          <th class="col etichette-tabella">Assistente Familiare CF</th>
+          <th class="col etichette-tabella">Tipologia</th>
+        </tr>
+      </thead>
+
+      <!-- Valori Contratti -->
+      <tbody>
+        <ng-container *ngFor="let contrattoAllegato of this.contrattiAllegatiFiltrati">
+          <!-- <tr class="row" style="border-top: 2px solid #EEEEEE;">
+            <td class="col valori-tabella"><a (click)="contrattoAllegato.isExpanded = !contrattoAllegato.isExpanded">
+                Dal {{contrattoAllegato.contratto.data_inizio | date: 'dd/MM/yyyy'}} al
+                {{contrattoAllegato.contratto.data_fine |
+                date:'dd/MM/yyyy'}}</a></td>
+            <td class="col valori-tabella">{{contrattoAllegato.contratto.assistente_familiare.cf}}</td>
+            <td class="col valori-tabella">{{replace_(contrattoAllegato.contratto.tipo)}}
+            </td>
+          </tr> -->
+
+          <!-- Dettaglio contratti -->
+          <ng-container *ngIf="contrattoAllegato.isExpanded">
+            <!-- Intestazioni -->
+            <tr class="row">
+              <th class="col etichette-tabella">Intestatario</th>
+              <ng-container *ngIf="!(contrattoAllegato.contratto.tipo === 'COOPERATIVA')">
+                <th class="col etichette-tabella">Fornitore</th>
+              </ng-container>
+              <ng-container *ngIf="contrattoAllegato.contratto.tipo === 'PARTITA_IVA'">
+                <th class="col etichette-tabella">P.Iva</th>
+              </ng-container>
+              <th class="col etichette-tabella">Allegati</th>
+            </tr>
+
+            <!-- Valori dettaglio -->
+            <tr class="row align-items-center">
+              <td class="col valori-tabella">
+                {{contrattoAllegato.contratto.intestatario.nome}}&nbsp;{{contrattoAllegato.contratto.intestatario.cognome}}
+              </td>
+
+              <ng-container *ngIf="!(contrattoAllegato.contratto.tipo === 'COOPERATIVA')">
+                <td class="col valori-tabella">
+                  {{contrattoAllegato.contratto.assistente_familiare.nome}}&nbsp;{{contrattoAllegato.contratto.assistente_familiare.cognome}}
+                </td>
+              </ng-container>
+
+              <ng-container *ngIf="contrattoAllegato.contratto.tipo === 'PARTITA_IVA'">
+                <td class="col valori-tabella">{{contrattoAllegato.contratto.piva_assitente_familiare}}</td>
+              </ng-container>
+
+              <!-- Allegati -->
+              <td class="col valori-tabella">
+                <ng-container *ngFor="let allegato of contrattoAllegato.allegati">
+                  <a href="{{scaricaAllegato(allegato.allegatoId)}}" target="_blank">
+                    {{replace_(allegato.allegatoTipo)}}
+                  </a>
+                  <br>
+                </ng-container>
+              </td>
+            </tr>
+          </ng-container>
+        </ng-container>
+      </tbody>
+    </table>
+
+    <!-- Controllo nessun risultato -->
+    <ng-container *ngIf="this.contrattiAllegatiFiltrati">
+      <ng-container *ngIf="this.contrattiAllegatiFiltrati.length === 0">
+        <div class="col-12" style="text-align: center;">
+          <label class="no-data-available">Nessun contratto presente nel periodo selezionato</label>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+
+  <div class="col-md-4"></div>
+</div>
+
+<!-- Pulsanti fine pagina -->
+<div class="row buonodom" style="padding-bottom:140px; padding-top: 30px;">
+  <div class="col-md-1"></div>
+
+  <div class="col-md-7">
+    <button type="button" class="btn btn-link pl-0" (click)="backButton()">
+      INDIETRO
+    </button>
+  </div>
+
+  <div class="col-md-4"></div>
+</div>

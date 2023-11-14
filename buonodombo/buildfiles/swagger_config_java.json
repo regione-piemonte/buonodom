@@ -1,0 +1,18 @@
+{
+"java8": false,
+"useBeanValidation": true,
+"hideGenerationTimestamp": true,
+"apiPackage": "it.csi.buonodom.buonodombo.business.be",
+"modelPackage":  "it.csi.buonodom.buonodombo.dto",
+"invokerPackage": "it.csi.buonodom.buonodombo.business.be",
+"implFolder": "implfolder",
+"sourceFolder": "src/java",
+"useSwaggerFeature": false,
+"generateJbossDeploymentDescriptor": false,
+"generateImplArtifacts": false,
+"generateSwaggerMetadata": false,
+"attributeSerializationStrategy": "explicit-as-modeled", 
+"accessHttpHeaders": true,
+"accessHttpRequest": true,
+"jsonLibrary": "fasterxml-jackson"
+}
