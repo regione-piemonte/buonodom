@@ -4,7 +4,6 @@
 
 publiccodeYmlVersion: '0.2'
 categories:
-  - application-development
   - erp
 description:
   it:
@@ -14,7 +13,7 @@ description:
     localisedName: Buono per la domiciliarità
     longDescription: |
       Il prodotto BUONODOM permette ai cittadini residenti in Piemonte di
-      caricare le domande per ottenere il buono domiciliarità, che è un
+      caricare le domande per ottenere il buono domiciliarità, che è un 
       contributo mensile erogato dalla Regione Piemonte del valore mensile di
       600 euro, spendibile per l'acquisto di servizi di assistenza familiare o
       di assistenza educativa. Successivamente, se la domanda viene accolta, il
@@ -39,6 +38,8 @@ it:
     cie: true
     pagopa: false
     spid: true
+  riuso:
+    codiceIPA: r_piemon
 legal:
   license: EUPL-1.2
 localisation:
@@ -54,6 +55,6 @@ name: buonodom
 platforms:
   - web
 releaseDate: '2023-11-12'
-softwareType: standalone/iot
+softwareType: standalone/web
 softwareVersion: 3.0.0
 url: 'https://github.com/regione-piemonte/buonodom'
