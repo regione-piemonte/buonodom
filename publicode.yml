@@ -8,21 +8,32 @@ categories:
 description:
   it:
     features:
-      - PNRR
+      - FSE
     genericName: buonodom
     localisedName: Buono per la domiciliarità
     longDescription: |
       Il prodotto BUONODOM permette ai cittadini residenti in Piemonte di
+
       caricare le domande per ottenere il buono domiciliarità, che è un 
+
       contributo mensile erogato dalla Regione Piemonte del valore mensile di
+
       600 euro, spendibile per l'acquisto di servizi di assistenza familiare o
+
       di assistenza educativa. Successivamente, se la domanda viene accolta, il
+
       cittadino potrà provvedere al caricamento della rendicontazione, ovvero di
+
       tutta la documentazione delle spese che ha effettivamente eseguito per il
+
       servizio di assistenza domiciliare; dopo che questa rendicontazione è
+
       stata presentata e "validata" da FinPiemonte attraverso un sistema esterno
+
       a BUONODOM, l'importo mensile di 600 euro verrà erogato. BUONODOM
+
       comprende anche tutta la fase di istruttoria delle domande rivolta agli
+
       operatori di back office e agli istruttori regionali.
     shortDescription: Caricamento domande domiciliarità
 developmentStatus: stable
